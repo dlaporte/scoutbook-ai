@@ -37,7 +37,7 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      - MCP_BASE_URL=https://${MCP_DOMAIN:?Set MCP_DOMAIN in .env}
+      - MCP_BASE_URL=${MCP_SERVER_URL:?Set MCP_SERVER_URL in .env}
       - FASTMCP_STATELESS_HTTP=true
     expose:
       - "8000"
