@@ -76,11 +76,7 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 
 **7. Deploy.** Coolify provisions Let's Encrypt TLS certificates automatically.
 
-### Option B: CapRover
-
-[CapRover](https://caprover.com) is another self-hosted PaaS with Docker Compose support. The setup is similar to Coolify — install CapRover on your VPS, create an app, and deploy this repo.
-
-### Option C: Docker Compose + Caddy
+### Option B: Docker Compose + Caddy
 
 For a manual VPS setup without a PaaS, see [Enabling HTTPS with Caddy](#enabling-https-with-caddy) below.
 
