@@ -1,0 +1,12 @@
+# Local development override — automatically loaded by docker compose.
+# For platform deploys (Coolify, CapRover, etc.), delete this file
+# or rename it; the platform handles port exposure and TLS.
+
+services:
+  app:
+    ports:
+      - "${APP_PORT:-8000}:8000"
+
+  mcp:
+    ports:
+      - "${MCP_PORT:-8001}:8000"

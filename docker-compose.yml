@@ -1,0 +1,53 @@
+services:
+  app:
+    image: ghcr.io/dlaporte/scoutbook-ai-app:latest
+    restart: unless-stopped
+    env_file: .env
+    expose:
+      - "8000"
+    volumes:
+      - app-data:/data
+    networks:
+      - default
+      - sandbox-net
+    depends_on:
+      - sandbox
+      - mcp
+
+  sandbox:
+    image: ghcr.io/dlaporte/scoutbook-ai-sandbox:latest
+    read_only: true
+    networks:
+      - sandbox-net
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 50
+    mem_limit: 512m
+    cpus: 1.0
+    tmpfs:
+      - /tmp:size=100m
+    user: "1000:1000"
+    environment:
+      - SANDBOX_TIMEOUT=60
+
+  mcp:
+    image: ghcr.io/dlaporte/scoutbook-ai-mcp:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MCP_BASE_URL=https://${MCP_DOMAIN:?Set MCP_DOMAIN in .env}
+      - FASTMCP_STATELESS_HTTP=true
+    expose:
+      - "8000"
+    volumes:
+      - mcp-data:/data
+
+networks:
+  sandbox-net:
+    internal: true
+
+volumes:
+  app-data:
+  mcp-data:
