@@ -1,0 +1,11 @@
+# Replace with your domain names.
+# Caddy automatically provisions Let's Encrypt TLS certificates.
+# For local HTTPS testing, use "localhost" instead of a domain.
+
+app.example.com {
+    reverse_proxy app:8000
+}
+
+mcp.example.com {
+    reverse_proxy mcp:8000
+}

@@ -90,55 +90,33 @@ When running on a bare VPS without a PaaS like Coolify, your services are expose
 - **Route by hostname** — direct traffic to the right service based on domain name
 - **Expose both services on port 443** — without a proxy, each service needs its own port
 
-[Caddy](https://caddyserver.com) is the simplest option because it automatically provisions Let's Encrypt certificates with zero configuration.
+[Caddy](https://caddyserver.com) is the simplest option because it automatically provisions Let's Encrypt certificates with zero configuration. A Caddy service is already included in `docker-compose.override.yml` — just uncomment it.
 
-**1. Create a `Caddyfile`:**
+**1. Edit `Caddyfile`** — replace the example domains with yours:
 
 ```
-your-app-domain.example.com {
+app.example.com {
     reverse_proxy app:8000
 }
 
-your-mcp-domain.example.com {
+mcp.example.com {
     reverse_proxy mcp:8000
 }
 ```
 
-**2. Create `docker-compose.caddy.yml`:**
+**2. Edit `docker-compose.override.yml`** — remove the `app` and `mcp` port mappings and uncomment the `caddy` service and `volumes` sections.
 
-```yaml
-services:
-  caddy:
-    image: caddy:2
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy-data:/data
-
-volumes:
-  caddy-data:
-```
-
-**3. Remove `docker-compose.override.yml`** (the Caddy proxy replaces direct port mapping):
+**3. Update `.env`** to use your HTTPS domains:
 
 ```bash
-rm docker-compose.override.yml
+APP_BASE_URL=https://app.example.com
+MCP_SERVER_URL=https://mcp.example.com
 ```
 
-**4. Update `.env`** to use your HTTPS domains:
+**4. Start everything:**
 
 ```bash
-APP_BASE_URL=https://your-app-domain.example.com
-MCP_SERVER_URL=https://your-mcp-domain.example.com
-```
-
-**5. Start everything:**
-
-```bash
-docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+docker compose up -d
 ```
 
 Caddy will automatically obtain and renew Let's Encrypt certificates for both domains. Make sure ports 80 and 443 are open on your firewall and both domains have DNS A records pointing to your VPS IP.

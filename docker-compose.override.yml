@@ -1,7 +1,9 @@
-# Local development override — automatically loaded by docker compose.
-# For platform deploys (Coolify, CapRover, etc.), delete this file
-# or rename it; the platform handles port exposure and TLS.
+# Override file — automatically loaded by docker compose.
+# For platform deploys (Coolify, etc.), delete this file;
+# the platform handles port exposure and TLS.
 
+# === Local Development (default) ===
+# Exposes services directly on host ports. No TLS.
 services:
   app:
     ports:
@@ -10,3 +12,23 @@ services:
   mcp:
     ports:
       - "${MCP_PORT:-8001}:8000"
+
+# === HTTPS with Caddy ===
+# To enable Caddy for TLS on a bare VPS:
+#   1. Delete the app/mcp port mappings above
+#   2. Uncomment the caddy service below
+#   3. Edit Caddyfile with your domain names
+#   4. Update APP_BASE_URL and MCP_SERVER_URL in .env to use https://
+
+#  caddy:
+#    image: caddy:2
+#    restart: unless-stopped
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+#      - caddy-data:/data
+
+#volumes:
+#  caddy-data:
