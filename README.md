@@ -80,6 +80,29 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 
 For a manual VPS setup without a PaaS, see [Enabling HTTPS with Caddy](#enabling-https-with-caddy) below.
 
+### Option C: Railway
+
+[Railway](https://railway.app) is a managed platform that builds and deploys from GitHub repos. It does not support Docker Compose, so each service must be deployed separately.
+
+> **Sandbox limitation:** Railway does not support the Docker security controls required by the code execution sandbox (read-only filesystem, capability dropping, network isolation). Set `SANDBOX_ENABLED=false` on the app service. Document generation (PDF, Excel, Word) and chart/visualization features will not be available.
+
+**1. Deploy the MCP server** — Create a new Railway service from the [scoutbook-ai-mcp](https://github.com/dlaporte/scoutbook-ai-mcp) repo:
+- Add a volume mounted at `/data`
+- Set `MCP_BASE_URL` to the public URL Railway assigns
+- Set `FASTMCP_STATELESS_HTTP=true`
+
+**2. Deploy the app** — Create a second Railway service from the [scoutbook-ai-app](https://github.com/dlaporte/scoutbook-ai-app) repo:
+- Add a volume mounted at `/data`
+- Set `APP_BASE_URL` to the public URL Railway assigns
+- Set `MCP_SERVER_URL` to the MCP service URL from step 1
+- Set `SESSION_SECRET` — generate with: `python3 -c "import secrets; print(secrets.token_urlsafe(32))"`
+- Set `ANTHROPIC_API_KEY` (or `OPENAI_*` vars for a local model)
+- Set `SANDBOX_ENABLED=false`
+
+Railway handles TLS and zero-downtime deploys for both services. You can also deploy from the pre-built container images instead of building from source:
+- App: `ghcr.io/dlaporte/scoutbook-ai-app:latest`
+- MCP: `ghcr.io/dlaporte/scoutbook-ai-mcp:latest`
+
 ---
 
 ## Enabling HTTPS with Caddy
