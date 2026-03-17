@@ -12,6 +12,10 @@ This repo orchestrates all three services with a single `docker compose up`:
 
 For details on the individual components, see [scoutbook-ai-app](https://github.com/dlaporte/scoutbook-ai-app) and [scoutbook-ai-mcp](https://github.com/dlaporte/scoutbook-ai-mcp).
 
+### API Specification
+
+Both the MCP server and this app are built on the BSA Scoutbook/Scouting.org REST API. The complete OpenAPI 3.0 specification is maintained separately: **[scoutbook-api](https://github.com/dlaporte/scoutbook-api)**.
+
 ---
 
 ## Quick Start (Local)
